@@ -1,0 +1,264 @@
+<body  class="special-page login-bg dark">
+<% provide(:title, 'Login') %>
+<p id="notice" style="text-align:center;margin-top:20px"><%= notice %></p>
+  <!--section id="message">
+    <div class="block-border"><div class="block-content no-title dark-bg">
+      <p class="mini-infos">Not registered yet? Use <b>SignUp</b> button to register.</p>
+    </div></div>
+  </section-->
+  
+  <section id="login-block">
+    <div class="block-border"><div class="block-content">
+      
+      <!--
+      IE7 compatibility: if you want to remove the <h1>, 
+      add style="zoom:1" to the above .block-content div
+      -->
+      <h1>Admin</h1>
+      <div class="block-header">Please login</div>
+        
+      <!--p class="message error no-margin">Error message</p-->
+      
+      <form class="form with-margin" name="login-form" id="login-form" method="post" action="" style="margin-bottom:0;">
+        <!--input type="hidden" name="a" id="a" value="send"-->
+        <p class="inline-small-label">
+          <label for="login"><span class="big">User name</span></label>
+          <input type="text" name="login" id="login" class="full-width" value="" style="margin-bottom:20px;">
+        </p>
+        <p class="inline-small-label">
+          <label for="pass"><span class="big">Password</span></label>
+          <input type="password" name="pass" id="pass" class="full-width" value="" style="margin-bottom:20px;">
+        </p>
+         <button type="submit" class="float-right">Login</button></a>
+        <!--br><br-->
+        <!--p class="input-height">
+          <input type="checkbox" name="keep-logged" id="keep-logged" value="1" class="mini-switch" checked="checked">
+          <label for="keep-logged" class="inline">Keep me logged in</label>
+        </p-->
+      </form>
+    <%= link_to '<button type="" class="float-right" style="margin-right:62px;">Signup</button>'.html_safe, signup_path %></a>
+      
+      <form style="margin-top:50px;" class="form" id="password-recovery" name="recovery_form" method="post" action="">
+        <fieldset class="grey-bg no-margin collapse">
+          <legend><a href="#">Lost password?</a></legend>
+          <p class="input-with-button">
+            <label for="recovery-mail">Enter your e-mail address</label>
+            <input type="email" name="recovery_mail" id="recovery-mail" value="" required>
+            <button type="submit">Send</button>
+          </p>
+        </fieldset>
+      </form>
+    </div></div>
+  </section>
+  
+  <section id="message">
+    <div class="block-border"><div class="1block-content no-title dark-bg">
+      <p class="mini-infos">Not registered yet? Use <b>SignUp</b> button to register.</p>
+    </div></div>
+  </section>
+  <!--
+  
+  Updated as v1.5:
+  Libs are moved here to improve performance
+  
+  -->
+  
+  <!-- Generic libs -->
+  
+  <!--script src="js/libs/jquery-1.6.3.min.js"></script>
+  <script src="js/old-browsers.js"></script-->    <!-- remove if you do not need older browsers detection -->
+  
+  <!-- Template libs -->
+  <!--script src="js/common.js"></script>
+  <script src="js/standard.js"></script-->
+  <!--[if lte IE 8]><script src="js/standard.ie.js"></script><![endif]-->
+  <!--script src="js/jquery.tip.js"></script-->
+  
+  <!-- example login script -->
+  <!--script type="text/javascript">
+
+
+
+    function validateCaseSensitiveEmail(email) 
+    { 
+        var reg = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
+        if (return reg.test(email))
+        {
+           return false; 
+        }
+        else
+        {
+           return true;
+        } 
+    } 
+
+    function validateFreeEmail(email) 
+    {
+        var re = /^([\w-\.]+@(?!gmail.com)(?!yahoo.com)(?!hotmail.com)([\w-]+\.)+[\w-]{2,4})?$/
+        if (return re.test(email))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
+</script-->
+<script>
+
+
+
+
+
+
+  
+    $(document).ready(function()
+    {
+      // We'll catch form submission to do it in AJAX, but this works also with JS disabled
+      $('#login-form').submit(function(event)
+      {
+        // Stop full page load
+       // event.preventDefault();
+        
+        // Check fields
+        var login = $('#login').val();
+        var pass = $('#pass').val();
+        
+        if (!login || login.length == 0)
+        {
+          $('#login-block').removeBlockMessages().blockMessage('Please enter your user name', {type: 'warning'});
+          return false
+        }
+
+
+        /*
+        else if(validateCaseSensitiveEmail(login))
+          {
+            $('#login-block').removeBlockMessages().blockMessage('Invalid email address!', {type: 'error'}); 
+          }
+
+          else if(validateFreeEmail(login))
+           {
+            $('#login-block').removeBlockMessages().blockMessage('username must be corporate email address!', {type: 'error'}); 
+           }
+
+
+
+            */
+
+        else if (!pass || pass.length == 0)
+        {
+          $('#login-block').removeBlockMessages().blockMessage('Please enter your password', {type: 'warning'});
+          return false
+        }
+        else
+        {
+            return true
+         
+              /*if (login=='admin' && pass=='admin')
+               {
+                  window.location="/dashboard";
+         
+                }
+                else 
+                  $('#login-block').removeBlockMessages().blockMessage('Invalid username and/or password!', {type: 'error'});
+         
+
+            
+
+          var submitBt = $(this).find('button[type=submit]');
+          submitBt.disableBt();
+          
+          // Target url
+          var target = $(this).attr('action');
+          if (!target || target == '')
+          {
+            // Page url without hash
+            target = document.location.href.match(/^([^#]+)/)[1];
+          }
+          
+          // Request
+          var data = {
+              a: $('#a').val(),
+              login: login,
+              pass: pass,
+              //'keep-logged': $('#keep-logged').attr('checked') ? 1 : 0
+            },
+            redirect = $('#redirect'),
+            sendTimer = new Date().getTime();
+          
+          if (redirect.length > 0)
+          {
+            data.redirect = redirect.val();
+          }
+          
+          // Send
+          $.ajax({
+            url: target,
+            dataType: 'json',
+            type: 'POST',
+            data: data,
+            success: function(data, textStatus, XMLHttpRequest)
+            {
+              if (data.valid)
+              {
+                // Small timer to allow the 'cheking login' message to show when server is too fast
+                var receiveTimer = new Date().getTime();
+                if (receiveTimer-sendTimer < 500)
+                {
+                  setTimeout(function()
+                  {
+                    document.location.href = data.redirect;
+                    
+                  }, 500-(receiveTimer-sendTimer));
+                }
+                else
+                {
+                  document.location.href = data.redirect;
+                }
+              }
+              else
+              {
+                // Message
+                $('#login-block').removeBlockMessages().blockMessage(data.error || 'An unexpected error occured, please try again', {type: 'error'});
+                
+                submitBt.enableBt();
+              }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown)
+            {
+              // Message
+              $('#login-block').removeBlockMessages().blockMessage('Error while contacting server, please try again', {type: 'error'});
+              
+              submitBt.enableBt();
+            }
+          });
+          
+          // Message
+          $('#login-block').removeBlockMessages().blockMessage('Please wait, cheking login...', {type: 'loading'});
+            //submitBt.enableBt();*/
+        }
+      });
+    });
+  
+  </script>
+  <script type="text/javascript">
+   $(document).ready(function()
+    {
+       $('#password-recovery').submit(function(event)
+      {
+        var email = $('#recovery-mail').val()
+        if (!email || email.length == 0)
+        {
+          $('#login-block').removeBlockMessages().blockMessage('Please enter your email address.', {type: 'warning'});
+          return false
+        }
+        else
+          return true
+         });
+    });
+</script>
+</body>

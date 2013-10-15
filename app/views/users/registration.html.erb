@@ -1,0 +1,216 @@
+<body  class="special-page login-bg dark">
+	<% provide(:title, 'Registration') %>
+	<section id="reg-block">
+		<div class="block-border"><div class="block-content">
+			
+			<!--
+			IE7 compatibility: if you want to remove the <h1>, 
+			add style="zoom:1" to the above .block-content div
+			-->
+                        <!--h1>Airtel Communications</h1-->
+			<div class="block-header">Registration</div>
+			
+
+
+			<%= form_for(@user, html: {class: "form with-margin", id: "reg-form"}) do |f| %>
+			<%# f.hidden :a, "send" , id: "a"  %>
+				<p class="inline-small-label">
+					<%= f.label :first_name %>
+					<%=  f.text_field :first_name, id: "fname", class: "full-width", value: "", style: "margin-bottom:20px;" %>
+				</p>
+
+				<p class="inline-small-label">
+					<%= f.label :last_name  %>
+					<%=  f.text_field :last_name, id: "lname", class: "full-width", value: "", style: "margin-bottom:20px;" %>
+				</p>
+
+				<p class="inline-small-label">
+					<%= f.label :phone_number  %>
+					<%=  f.text_field :phone_number , id: "phone", class: "full-width", value: "", style: "margin-bottom:20px;" %>
+				</p>
+
+				<p class="inline-small-label">
+					<%= f.label :password  %>
+					<%=  f.password_field :password, id: "pass", class: "full-width", value: "", style: "margin-bottom:20px;" %>
+				</p>
+
+				<p class="inline-small-label">
+					<%= f.label :confirm_password  %>
+					<%=  f.password_field :confirm_password, id: "confirm_pass", class: "full-width", value: "", style: "margin-bottom:20px;" %>
+				</p>
+			
+
+			<%= f.button "Complete Registeration", class: "float-right", type: "submit" %>	
+
+			<% end %>
+
+			<!--form class="form with-margin" name="login-form" id="login-form" method="post" action="">
+				<input type="hidden" name="a" id="a" value="send">
+				<p class="inline-small-label">
+					<label for="login"><span class="big">First Name</span></label>
+					<input type="text" name="login" id="login" class="full-width" value="" style="margin-bottom:20px;">
+				</p>
+				<p class="inline-small-label">
+					<label for="login"><span class="big">Last Name</span></label>
+					<input type="text" name="login" id="login" class="full-width" value="" style="margin-bottom:20px;">
+				</p>
+				<p class="inline-small-label">
+					<label for="pass"><span class="big">Email</span></label>
+					<input type="text" name="email" id="email" class="full-width" value="" style="margin-bottom:20px;">
+				</p>
+				<p class="inline-small-label">
+					<label for="pass"><span class="big">Password</span></label>
+					<input type="password" name="pass" id="pass" class="full-width" value="" style="margin-bottom:20px;">
+				</p>
+				<p class="inline-small-label">
+					<label for="pass"><span class="big">Confirm Password</span></label>
+					<input type="password" name="pass" id="pass" class="full-width" value="" style="margin-bottom:20px;">
+				</p>
+				
+				<button type="submit" class="float-right">Complete Registeration</button>
+                                <p class="input-height">
+
+                                </p>
+			</form-->
+			
+		</div></div>
+	</section>
+	
+	<!--
+	
+	Updated as v1.5:
+	Libs are moved here to improve performance
+	
+	-->
+	
+	<!-- Generic libs -->
+	<!--script src="js/libs/jquery-1.6.3.min.js"></script>
+	<script src="js/old-browsers.js"></script-->		<!-- remove if you do not need older browsers detection -->
+	
+	<!-- Template libs -->
+	<!--script src="js/common.js"></script>
+	<script src="js/standard.js"></script-->
+	<!--[if lte IE 8]><script src="js/standard.ie.js"></script><![endif]-->
+	<!--script src="js/jquery.tip.js"></script-->
+	
+	<!-- example login script -->
+	<script>
+	
+		$(document).ready(function()
+		{
+			// We'll catch form submission to do it in AJAX, but this works also with JS disabled
+			$('#reg-form').submit(function(event)
+			{
+				// Stop full page load
+				//event.preventDefault();
+				// Check fields
+				var fname = $('#fname').val();
+				var lname = $('#lname').val();
+				var phone = $('#phone').val();
+				var pass = $('#pass').val();
+				var confirm_pass = $('#confirm_pass').val();
+
+				if (!fname || fname.length == 0)
+				{
+					$('#reg-block').removeBlockMessages().blockMessage('Please enter your First name', {type: 'warning'});
+					return false;
+				}
+				else if (!lname || lname.length == 0)
+				{
+					$('#reg-block').removeBlockMessages().blockMessage('Please enter your Last name', {type: 'warning'});
+					return false;
+				}
+				else if (!phone || phone.length == 0)
+				{
+					$('#reg-block').removeBlockMessages().blockMessage('Please enter your Phone number', {type: 'warning'});
+					return false;
+				}
+				else if (!pass || pass.length == 0)
+				{
+					$('#reg-block').removeBlockMessages().blockMessage('Please enter your Password', {type: 'warning'});
+					return false;
+				}
+				else if (!confirm_pass || confirm_pass.length == 0)
+				{
+					$('#reg-block').removeBlockMessages().blockMessage('Please Re-enter your Password', {type: 'warning'});
+					return false;
+				}
+
+				/*else
+				{
+					var submitBt = $(this).find('button[type=submit]');
+					submitBt.disableBt();
+					
+					// Target url
+					var target = $(this).attr('action');
+					if (!target || target == '')
+					{
+						// Page url without hash
+						target = document.location.href.match(/^([^#]+)/)[1];
+					}
+					
+					// Request
+					var data = {
+							a: $('#a').val(),
+							login: login,
+							pass: pass,
+							'keep-logged': $('#keep-logged').attr('checked') ? 1 : 0
+						},
+						redirect = $('#redirect'),
+						sendTimer = new Date().getTime();
+					
+					if (redirect.length > 0)
+					{
+						data.redirect = redirect.val();
+					}
+					
+					// Send
+					$.ajax({
+						url: target,
+						dataType: 'json',
+						type: 'POST',
+						data: data,
+						success: function(data, textStatus, XMLHttpRequest)
+						{
+							if (data.valid)
+							{
+								// Small timer to allow the 'cheking login' message to show when server is too fast
+								var receiveTimer = new Date().getTime();
+								if (receiveTimer-sendTimer < 500)
+								{
+									setTimeout(function()
+									{
+										document.location.href = data.redirect;
+										
+									}, 500-(receiveTimer-sendTimer));
+								}
+								else
+								{
+									document.location.href = data.redirect;
+								}
+							}
+							else
+							{
+								// Message
+								$('#reg-block').removeBlockMessages().blockMessage(data.error || 'An unexpected error occured, please try again', {type: 'error'});
+								
+								submitBt.enableBt();
+							}
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown)
+						{
+							// Message
+							$('#reg-block').removeBlockMessages().blockMessage('Error while contacting server, please try again', {type: 'error'});
+							
+							submitBt.enableBt();
+						}
+					});
+					
+					// Message
+					$('#reg-block').removeBlockMessages().blockMessage('Please wait, processing...', {type: 'loading'});
+				} */
+			});
+		});
+	
+	</script>
+</body>
