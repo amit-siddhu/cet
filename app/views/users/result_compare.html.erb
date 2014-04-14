@@ -1,0 +1,426 @@
+<body>
+	<style type="text/css">
+	.tabunic { text-align:center; border:2px solid #070707;  font-size:12px; color:#000; border-left:none; border-bottom:none;}
+ .tabunic td{ text-align:center; padding:5px; border-left:2px solid #070707; border-bottom:2px solid #070707; padding:0px 1px 0px 1px;}
+ 
+ .tab_heading{font-size:14px; font-weight:bold; font-family:Arial, Helvetica, sans-serif; background-color:#C2D69A;}
+ .tab_heading td{font-size:13px; font-weight:bold; padding:50px 10px;}
+ 
+ .new td{font-size:14px; font-weight:bold; padding:20px 10px; background-color:#FCD5B4;}
+ .new td.no{font-size:14px; font-weight:bold; padding:20px 10px; background-color:#C2D69A;}
+ 
+ .newtab{font-size:14px; font-weight:bold; padding:10px 10px; border:none;}
+ .newtab td{font-size:14px; font-weight:bold; padding:10px 10px; text-align:right; border:none;}
+	</style>
+	<% provide(:title, 'Result Compare') %>
+	<!-- Status bar -->
+	<div id="status-bar"><div class="container_12">
+	
+		<ul id="status-infos" style="margin-top:15px;">
+			<li class="spaced" style="margin-top:4px;">Logged as: <strong><%= session[:email] %></strong></li>
+			<li><a href="/logout" class="button red" title="Logout"><span class="smaller">LOGOUT</span></a></li>
+		</ul>
+
+<ul id="breadcrumb" style="margin-top:15px;">
+			<li><a href="#" title="Home">Home</a></li>
+			<li><a href="/dashboard" title="Dashboard">Dashboard</a></li>
+			<li><a href="#" title="Consolidated Report">Result Compare</a></li>
+		
+</ul>
+
+		
+
+	</div></div>
+	<!-- End status bar -->
+	
+
+
+<% if !@far.nil?
+	
+ %>
+
+
+
+<h3 style="text-align:center">Name of service Provider : <%= @tsp %></h3>
+<h3 style="text-align:center">Mobile Network - B.T.S. (C<sub>BTS</sub>)</h3>
+<table width="100%" cellspacing="0" cellpadding="0" class="tabunic">
+	<tr class="tab_heading">
+		<td>S. No.</td>
+		<td>BTS No.</td>
+		<td>Total Power Consumpation<br /> (p)<br /> (in KW)</td>
+		<td>Avg. Grid  <br /> Supply <br /> (in hrs.)</td>
+		<td>DG capacity <br /> (in KVA)</td>
+		<td>Avg. DG Supply <br /> (in hrs.)</td>
+		<td>&eta; of DG Set </td>
+		<%# @k = 0 %>
+		<% @far.each do |fr| %>
+		<td><%= fr[:name] %></td>	
+		<%# @k=@k+1 %>
+		<% end %>
+		<%# if @k < 5 %>
+			<%# (@k..4).each do |j| %>
+			<!--td>&nbsp;</td-->			
+			<%# end %>
+		<%# end %>
+		<!--td>Carbon Emission</td>
+		<td>Carbon Emission (in Tonnes)</td>
+		<td>Total No. of Subscribers</td>
+		<td>Carbon Emission per Subscriber <br /> (in Tonnes)</td>
+		<td>Carbon Emission per Subscriber <br /> (in kg)</td-->
+	</tr>
+	<tr class="new">
+		<td class="no">&nbsp;</td>
+		<td class="no">&nbsp;</td>
+		<td class="no">&nbsp;</td>
+		<td>&lsquo;x&rsquo;</td>
+		<td>&lsquo;y&rsquo;</td>
+		<td>&lsquo;z&rsquo;</td>
+		<td>&lsquo;&eta;&rsquo;</td>
+		<%# @k = 0 %>
+		<% @far.each do |fr| %>
+		<td>C=<%= fr[:formula] %></td>	
+		<%# @k=@k+1 %>
+		<% end %>
+		<%# if @k < 5 %>
+			<%# (@k..4).each do |j| %>
+			<!--td>&nbsp;</td-->			
+			<%# end %>
+		<%# end %>
+
+		<!--td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td-->
+	</tr>
+
+<% @ed.each do |e| %>
+	<tr>
+		<td><%= @i %></td>
+		<td><%= e.site_name %></td>
+		<td><%= ((e.kw_per_day).to_f).round(2) %></td>
+		<td><%= ((e.eb_availability).to_f).round(2) %></td>
+		<td><%= e.dg_capacity %></td>
+		<td><%= ((e.dg_run_per_day).to_f).round(2) %></td>
+		<td><%= e.eta %></td>
+		
+
+
+
+
+
+
+		<%# @k = 0 %>
+		<% @far.each do |fr| %>
+
+
+
+
+
+		<% 
+
+
+
+@fvalue = fr[:formula]
+
+if @fvalue.include? "Pa"
+	if (e.eb_availability).nil?
+		@fvalue = @fvalue.gsub("Pa", "0")	
+	else
+		@fvalue = @fvalue.gsub("Pa", e.eb_availability)					
+	end
+end
+
+if @fvalue.include? "Pb"
+	if (e.dg_rating).nil?
+		@fvalue = @fvalue.gsub("Pb", "0")
+	else
+		@fvalue = @fvalue.gsub("Pb", e.dg_rating)	
+	end
+	
+end
+
+if @fvalue.include? "Pc"
+	if (e.dg_run_per_day).nil?
+		@fvalue = @fvalue.gsub("Pc", "0")
+	else
+		@fvalue = @fvalue.gsub("Pc", e.dg_run_per_day)
+	end
+	
+end
+
+if @fvalue.include? "Pd"
+	if (e.kw_per_day).nil?
+		@fvalue = @fvalue.gsub("Pd", "0")
+	else
+		@fvalue = @fvalue.gsub("Pd", e.kw_per_day)	
+	end
+		
+end
+
+if @fvalue.include? "Pe"
+	if (e.eta).nil?
+		@fvalue = @fvalue.gsub("Pe", "0")
+	else
+		@fvalue = @fvalue.gsub("Pe", e.eta)	
+	end
+	
+end
+
+if @fvalue.include? "Pf"
+	if (e.days_in_month).nil?
+		@fvalue = @fvalue.gsub("Pf", "0")
+	else
+		@fvalue = @fvalue.gsub("Pf", e.days_in_month)
+	end
+	
+end
+
+if @fvalue.include? "Pg"
+	if (e.carbon_footprint).nil?
+		@fvalue = @fvalue.gsub("Pg", "0")
+	else
+		@fvalue = @fvalue.gsub("Pg", e.carbon_footprint)	
+	end
+	
+end
+
+if @fvalue.include? "Ph"
+	if (e.carbon_footprint_opco).nil?
+		@fvalue = @fvalue.gsub("Ph", "0")
+	else
+		@fvalue = @fvalue.gsub("Ph", e.carbon_footprint_opco)	
+	end
+	
+end
+
+if @fvalue.include? "Pi"
+	if (e.dg_opening_reading).nil?
+		@fvalue = @fvalue.gsub("Pi", "0")
+	else
+		@fvalue = @fvalue.gsub("Pi", e.dg_opening_reading)
+	end
+end
+
+if @fvalue.include? "Pj"
+	if (e.dg_closing_reading).nil?
+		@fvalue = @fvalue.gsub("Pj", "0")
+	else
+		@fvalue = @fvalue.gsub("Pj", e.dg_closing_reading)	
+	end
+	
+end
+
+if @fvalue.include? "Pk"
+	if (e.eb_opening_reading).nil?
+		@fvalue = @fvalue.gsub("Pk", "0")
+	else
+		@fvalue = @fvalue.gsub("Pk", e.eb_opening_reading)	
+	end
+	
+end
+
+if @fvalue.include? "Pl"
+	if (e.eb_closing_reading).nil?
+		@fvalue = @fvalue.gsub("Pl", "0")
+	else
+		@fvalue = @fvalue.gsub("Pl", e.eb_closing_reading)	
+	end
+	
+end
+
+if @fvalue.include? "Pm"
+	if (e.eb_rate_per_unit).nil?
+		@fvalue = @fvalue.gsub("Pm", "0")
+	else
+		@fvalue = @fvalue.gsub("Pm", e.eb_rate_per_unit)
+	end
+	
+end
+
+if @fvalue.include? "Pn"
+	if (e.eb_units_consumption).nil?
+		@fvalue = @fvalue.gsub("Pn", "0")	
+	else
+		@fvalue = @fvalue.gsub("Pn", e.eb_units_consumption)
+	end
+	
+end
+
+if @fvalue.include? "Po"
+	if (e.opco_dc_load).nil?
+		@fvalue = @fvalue.gsub("Po", "0")
+	else
+		@fvalue = @fvalue.gsub("Po", e.opco_dc_load)	
+	end
+	
+end
+
+if @fvalue.include? "Pp"
+	if (e.fuel_rate_per_ltr).nil?
+		@fvalue = @fvalue.gsub("Pp", "0")
+	else	
+		@fvalue = @fvalue.gsub("Pp", e.fuel_rate_per_ltr)
+	end
+	
+end
+
+if @fvalue.include? "Pq"
+	if (e.opco_diesel_amount).nil?
+		@fvalue = @fvalue.gsub("Pq", "0")
+	else
+		@fvalue = @fvalue.gsub("Pq", e.opco_diesel_amount)	
+	end
+	
+end
+
+if @fvalue.include? "Pr"
+	if (e.opco_eb_cost).nil?
+		@fvalue = @fvalue.gsub("Pr", "0")
+	else
+		@fvalue = @fvalue.gsub("Pr", e.opco_eb_cost)	
+	end
+	
+end
+
+if @fvalue.include? "Ps"
+	if (e.opco_kwh).nil?
+		@fvalue = @fvalue.gsub("Ps", "0")
+	else
+		@fvalue = @fvalue.gsub("Ps", e.opco_kwh)
+	end
+	
+end
+
+if @fvalue.include? "Pt"
+	if (e.opco_load_percent).nil?
+		@fvalue = @fvalue.gsub("Pt", "0")
+	else
+		@fvalue = @fvalue.gsub("Pt", e.opco_load_percent)
+	end
+		
+end
+
+if @fvalue.include? "Pu"
+	if (e.tenents_per_ip).nil?
+		@fvalue = @fvalue.gsub("Pu", "0")
+	else
+		@fvalue = @fvalue.gsub("Pu", e.tenents_per_ip)	
+	end
+	
+end
+
+if @fvalue.include? "Pv"
+	if (e.total_dg_run).nil?
+		@fvalue = @fvalue.gsub("Pv", "0")
+	else
+		@fvalue = @fvalue.gsub("Pv", e.total_dg_run)	
+	end
+	
+end
+
+if @fvalue.include? "Pw"
+	if (e.total_kwh_reading).nil?
+		@fvalue = @fvalue.gsub("Pw", "0")
+	else
+		@fvalue = @fvalue.gsub("Pw", e.total_kwh_reading)
+	end
+	
+end
+
+if @fvalue.include? "Px"
+	if (e.total_diesel_consumption).nil?
+		@fvalue = @fvalue.gsub("Px", "0")
+	else
+		@fvalue = @fvalue.gsub("Px", e.total_diesel_consumption)	
+	end
+	
+end
+
+if @fvalue.include? "Py"
+	if (e.total_diesel_cost).nil?
+		@fvalue = @fvalue.gsub("Py", "0")
+	else
+		@fvalue = @fvalue.gsub("Py", e.total_diesel_cost)
+	end
+	
+end
+
+if @fvalue.include? "Pz"
+	if (e.total_site_dc_load).nil?
+		@fvalue = @fvalue.gsub("Pz", "0")
+	else	
+		@fvalue = @fvalue.gsub("Pz", e.total_site_dc_load)
+	end
+	
+end
+
+
+		 %>	
+		
+
+<% @v1 = controller.evaluate_arithmetic_expression(@fvalue) %>
+
+			<td><%= number_with_delimiter(@v1.round(2), :delimiter => ',') %></td>
+
+			<% @sum[@s] = @sum[@s] + @v1 %>
+
+		<% @s = @s+1 %>
+		<%# @k=@k+1 %>
+		<% end %>
+		<%# if @k < 5 %>
+			<%# (@k..4).each do |j| %>
+			<!--td>&nbsp;</td-->			
+			<%# end %>
+		<%# end %>
+
+	</tr>
+
+	<% @i = @i+1 %>  					
+    <% @s = 0 %>
+    <% end %>
+	
+
+
+
+
+
+
+
+
+
+
+	<tr>
+		<td>&nbsp;</td>
+		
+		<td colspan="6"><table width="100%" border="0" cellspacing="0" cellpadding="0" class="newtab">
+				<tr>
+					<td><strong>Total</strong></td>
+				</tr>
+		</table></td>
+		<% @sum.each do |s| %>
+			<td><%= number_with_delimiter(s.round(2), :delimiter => ',') %></td>
+		<% end %>
+		<!--td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td-->
+	</tr>
+</table>
+
+	<% end %>
+	<br /><br />
+	<footer>
+		
+		<div class="float-left">
+			<a href="#" class="button">Help</a>
+			<a href="#" class="button">About</a>
+		</div>
+		
+		<div class="float-right">
+			<a href="#top" class="button"><img src="assets/icons/fugue/navigation-090.png" width="16" height="16"> Page top</a>
+		</div>
+		
+	</footer>
+	
+	</body>
